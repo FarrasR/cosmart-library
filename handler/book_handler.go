@@ -14,9 +14,9 @@ type BookHandler struct {
 	BookService service.BookService
 }
 
-func NewBookHandler(bookService service.BookService) *BookHandler {
+func NewBookHandler(BookService service.BookService) *BookHandler {
 	return &BookHandler{
-		BookService: bookService,
+		BookService: BookService,
 	}
 }
 
@@ -73,7 +73,7 @@ func (h *BookHandler) PostBook(c *gin.Context) {
 
 	book, err := h.BookService.CreateBook(form)
 	if err != nil {
-		response.ErrorInvalidParameter(c)
+		response.Error(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 	response.OKWithHTTPCode(c, http.StatusCreated, "Book created successfully", book)

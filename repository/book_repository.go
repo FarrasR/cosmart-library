@@ -15,9 +15,9 @@ type bookRepository struct {
 	DatabaseInstance database.DatabaseInstance
 }
 
-func NewBookRepository(databaseInstance database.DatabaseInstance) BookRepository {
+func NewBookRepository(DatabaseInstance database.DatabaseInstance) BookRepository {
 	return &bookRepository{
-		DatabaseInstance: databaseInstance,
+		DatabaseInstance: DatabaseInstance,
 	}
 }
 

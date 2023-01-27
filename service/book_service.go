@@ -13,21 +13,21 @@ type BookService interface {
 }
 
 type bookService struct {
-	bookRepository repository.BookRepository
+	BookRepository repository.BookRepository
 }
 
-func NewBookService(bookRepository repository.BookRepository) BookService {
+func NewBookService(BookRepository repository.BookRepository) BookService {
 	return &bookService{
-		bookRepository: bookRepository,
+		BookRepository: BookRepository,
 	}
 }
 
 func (s *bookService) GetBookById(bookId int) (model.Book, error) {
-	return s.bookRepository.FindOne(bookId)
+	return s.BookRepository.FindOne(bookId)
 }
 
 func (s *bookService) GetBooks(limit int, offset int) ([]model.Book, error) {
-	return s.bookRepository.Find(limit, offset)
+	return s.BookRepository.Find(limit, offset)
 }
 
 func (s *bookService) CreateBook(form form.FormCreateBook) (model.Book, error) {
@@ -37,5 +37,5 @@ func (s *bookService) CreateBook(form form.FormCreateBook) (model.Book, error) {
 		Edition: form.Edition,
 	}
 
-	return s.bookRepository.Create(book)
+	return s.BookRepository.Create(book)
 }

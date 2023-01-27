@@ -13,8 +13,13 @@ func main() {
 	utils.LoadEnv()
 	database := database.InitDB()
 	bookRepository := repository.NewBookRepository(database)
-	bookService := service.NewBookService(bookRepository)
-	BookHandler := handler.NewBookHandler(bookService)
+	borrowScheduleRepository := repository.NewBorrowScheduleRepository(database)
 
-	router.StartServer(BookHandler)
+	bookService := service.NewBookService(bookRepository)
+	borrowScheduleService := service.NewBorrowScheduleService(borrowScheduleRepository)
+
+	router.StartServer(
+		handler.NewBookHandler(bookService),
+		handler.NewBorrowScheduleHandler(borrowScheduleService),
+	)
 }

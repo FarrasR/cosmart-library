@@ -50,3 +50,7 @@ func OKHelloWorld(c *gin.Context) {
 func ErrorInvalidParameter(c *gin.Context) {
 	c.JSON(http.StatusBadRequest, buildError(errorInvalidParameter, nil))
 }
+
+func Error(c *gin.Context, httpCode int, message string) {
+	c.JSON(httpCode, buildError(message, nil))
+}

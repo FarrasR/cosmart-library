@@ -2,6 +2,7 @@ package router
 
 import (
 	"cosmart-library/entity/response"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +23,7 @@ func StartServer(handlers ...Handler) {
 		handler.Register(router)
 	}
 
-	err := router.Run(":3000")
+	err := router.Run(os.Getenv("APP_PORT"))
 	if err != nil {
 		panic("Error To Start")
 	}
