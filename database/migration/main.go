@@ -12,9 +12,9 @@ import (
 func main() {
 	utils.LoadEnv()
 
-	database.InitDB()
+	ins := database.InitDB()
 
-	m := gormigrate.New(database.GetConn(), gormigrate.DefaultOptions, []*gormigrate.Migration{
+	m := gormigrate.New(ins.GetConn(), gormigrate.DefaultOptions, []*gormigrate.Migration{
 		&migrationVersion.V20230128073015,
 	})
 

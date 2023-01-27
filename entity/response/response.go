@@ -9,6 +9,8 @@ import (
 const (
 	helloWorld     = "Hello World"
 	successMessage = "Success"
+
+	errorInvalidParameter = "Invalid parameter"
 )
 
 type ResponseBody struct {
@@ -25,6 +27,14 @@ func buildSuccess(message string, data any) ResponseBody {
 	}
 }
 
+func buildError(message string, data any) ResponseBody {
+	return ResponseBody{
+		Success: false,
+		Message: message,
+		Data:    data,
+	}
+}
+
 func OK(c *gin.Context, data any) {
 	c.JSON(http.StatusOK, buildSuccess(successMessage, data))
 }
@@ -35,4 +45,8 @@ func OKWithHTTPCode(c *gin.Context, httpCode int, message string, data any) {
 
 func OKHelloWorld(c *gin.Context) {
 	c.JSON(http.StatusOK, buildSuccess(helloWorld, nil))
+}
+
+func ErrorInvalidParameter(c *gin.Context) {
+	c.JSON(http.StatusBadRequest, buildError(errorInvalidParameter, nil))
 }

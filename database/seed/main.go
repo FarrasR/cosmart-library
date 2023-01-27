@@ -35,7 +35,7 @@ type OpenLibrary struct {
 func main() {
 
 	utils.LoadEnv()
-	database.InitDB()
+	ins := database.InitDB()
 
 	fmt.Println("opening json file...")
 
@@ -51,14 +51,15 @@ func main() {
 
 	fmt.Println("Starting seeding")
 
-	err = database.Transaction(func() error {
+	err = ins.Transaction(func() error {
 		for i := 0; i < len(open_library.Works); i++ {
 			book := model.Book{
 				Title:   open_library.Works[i].Title,
 				Author:  open_library.Works[i].Authors[0].Name,
 				Edition: open_library.Works[i].Edition_count,
 			}
-			if result := database.GetConn().Create(&book); result.Error != nil {
+
+			if result := ins.GetConn().Create(&book); result.Error != nil {
 				return result.Error
 			}
 		}

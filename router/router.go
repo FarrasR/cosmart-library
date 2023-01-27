@@ -6,10 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GinEng *gin.Engine
-
 type Handler interface {
-	Register(router GinEng)
+	Register(router *gin.Engine)
 }
 
 func StartServer(handlers ...Handler) {

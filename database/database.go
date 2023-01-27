@@ -9,37 +9,52 @@ import (
 	"gorm.io/gorm"
 )
 
-var dbInstance *gorm.DB
 var once sync.Once
 
-func InitDB() {
+type DatabaseInstance interface {
+	GetConn() *gorm.DB
+	Transaction(func() error) error
+}
+
+type databaseInstance struct {
+	DB *gorm.DB
+}
+
+var dbInstance *databaseInstance
+
+func InitDB() DatabaseInstance {
 	once.Do(func() {
-		var err error
-		dbInstance, err = gorm.Open(mysql.Open(GetDSN()))
+		db, err := gorm.Open(mysql.Open(getDSN()))
+
 		if err != nil {
 			panic(err)
 		}
-	})
-}
 
-func GetConn() *gorm.DB {
+		dbInstance = &databaseInstance{
+			DB: db,
+		}
+	})
 	return dbInstance
 }
 
-func Transaction(f func() error) error {
+func (i *databaseInstance) GetConn() *gorm.DB {
+	return i.DB
+}
 
-	dbInstance = dbInstance.Begin()
+func (i *databaseInstance) Transaction(f func() error) error {
+
+	i.DB = i.DB.Begin()
 
 	err := f()
 	if err != nil {
-		dbInstance.Rollback()
+		i.DB.Rollback()
 		return err
 	}
 
-	return dbInstance.Commit().Error
+	return i.DB.Commit().Error
 }
 
-func GetDSN() string {
+func getDSN() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		os.Getenv("DB_USERNAME"),
 		os.Getenv("DB_PASSWORD"),
