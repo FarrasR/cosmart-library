@@ -26,6 +26,19 @@ func GetConn() *gorm.DB {
 	return dbInstance
 }
 
+func Transaction(f func() error) error {
+
+	dbInstance = dbInstance.Begin()
+
+	err := f()
+	if err != nil {
+		dbInstance.Rollback()
+		return err
+	}
+
+	return dbInstance.Commit().Error
+}
+
 func GetDSN() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		os.Getenv("DB_USERNAME"),
