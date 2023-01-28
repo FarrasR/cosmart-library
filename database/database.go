@@ -37,6 +37,13 @@ func InitDB() DatabaseInstance {
 	return dbInstance
 }
 
+// this is added to satisfy repository test
+func NewDatabaseInstance(db *gorm.DB) DatabaseInstance {
+	return &databaseInstance{
+		DB: db,
+	}
+}
+
 func (i *databaseInstance) GetConn() *gorm.DB {
 	return i.DB
 }

@@ -2,16 +2,14 @@ package router
 
 import (
 	"cosmart-library/entity/response"
+	"cosmart-library/handler"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Handler interface {
-	Register(router *gin.Engine)
-}
-
-func StartServer(handlers ...Handler) {
+func StartServer(handlers ...handler.Handler) http.Handler {
 	router := gin.New()
 	router.RedirectFixedPath = true
 
@@ -27,6 +25,7 @@ func StartServer(handlers ...Handler) {
 	if err != nil {
 		panic("Error To Start")
 	}
+	return router
 }
 
 func healthCheck(c *gin.Context) {
