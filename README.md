@@ -94,7 +94,7 @@ Params :
 
 #### **Example Curl** :
 ```curl
-curl --location --request GET 'localhost:3000/books?limit=10&offset=0&genre=love'
+curl --location --request GET 'localhost:3000/books/1'
 ```
 #### **Success Response**
 ```json

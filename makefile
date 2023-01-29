@@ -10,8 +10,7 @@ test:
 build: 
 	go build -o cosmart-library main.go
 
-run: 
-	build
+run: build
 	./cosmart-library
 	 
 migrate:
@@ -21,7 +20,6 @@ migrate:
 seed:
 	go build -o cosmart-library-seed ./database/seed/main.go
 	./cosmart-library-seed
-
 
 all:
 	dep
