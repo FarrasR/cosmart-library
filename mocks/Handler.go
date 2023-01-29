@@ -4,6 +4,7 @@ package mocks
 
 import (
 	gin "github.com/gin-gonic/gin"
+
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -12,9 +13,9 @@ type Handler struct {
 	mock.Mock
 }
 
-// Register provides a mock function with given fields: _a0
-func (_m *Handler) Register(_a0 *gin.Engine) {
-	_m.Called(_a0)
+// Register provides a mock function with given fields: router
+func (_m *Handler) Register(router *gin.Engine) {
+	_m.Called(router)
 }
 
 type mockConstructorTestingTNewHandler interface {

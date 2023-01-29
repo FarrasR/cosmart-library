@@ -7,7 +7,7 @@ import (
 
 type BookRepository interface {
 	FindOne(id int) (model.Book, error)
-	Find(offset int, limit int) ([]model.Book, error)
+	Find(limit int, offset int, genre string) ([]model.Book, error)
 	Create(book model.Book) (model.Book, error)
 }
 
@@ -31,10 +31,10 @@ func (r *bookRepository) FindOne(id int) (model.Book, error) {
 	return book, nil
 }
 
-func (r *bookRepository) Find(limit int, offset int) ([]model.Book, error) {
+func (r *bookRepository) Find(limit int, offset int, genre string) ([]model.Book, error) {
 	var books []model.Book
 
-	if result := r.DatabaseInstance.GetConn().Offset(offset).Limit(limit).Find(&books); result.Error != nil {
+	if result := r.DatabaseInstance.GetConn().Where(&model.Book{Genre: genre}).Offset(offset).Limit(limit).Find(&books); result.Error != nil {
 		return nil, result.Error
 	}
 

@@ -8,7 +8,7 @@ import (
 
 type BookService interface {
 	GetBookById(bookId int) (model.Book, error)
-	GetBooks(limit int, offset int) ([]model.Book, error)
+	GetBooks(form form.FormGetBooks) ([]model.Book, error)
 	CreateBook(form form.FormCreateBook) (model.Book, error)
 }
 
@@ -26,8 +26,8 @@ func (s *bookService) GetBookById(bookId int) (model.Book, error) {
 	return s.BookRepository.FindOne(bookId)
 }
 
-func (s *bookService) GetBooks(limit int, offset int) ([]model.Book, error) {
-	return s.BookRepository.Find(limit, offset)
+func (s *bookService) GetBooks(form form.FormGetBooks) ([]model.Book, error) {
+	return s.BookRepository.Find(form.Limit, form.Offset, form.Genre)
 }
 
 func (s *bookService) CreateBook(form form.FormCreateBook) (model.Book, error) {

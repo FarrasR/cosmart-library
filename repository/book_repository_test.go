@@ -47,14 +47,15 @@ func (s *BookRepositorySuite) TestFindOneSuccess() {
 		Model: gorm.Model{
 			ID: 1,
 		},
-		Title:   "test",
+		Title:   "testing golang for begtinners",
 		Author:  "lorem bin ipsum",
 		Edition: 1,
+		Genre:   "test",
 	}
 
 	s.sqlmock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `books` WHERE `books`.`id` = ? AND `books`.`deleted_at` IS NULL ORDER BY `books`.`id` LIMIT 1")).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "title", "author", "edition"}).
-			AddRow(expectedBook.ID, expectedBook.Title, expectedBook.Author, expectedBook.Edition))
+		WillReturnRows(sqlmock.NewRows([]string{"id", "title", "author", "edition", "genre"}).
+			AddRow(expectedBook.ID, expectedBook.Title, expectedBook.Author, expectedBook.Edition, expectedBook.Genre))
 
 	resultBook, err := s.repo.FindOne(1)
 
@@ -81,25 +82,27 @@ func (s *BookRepositorySuite) TestFindSuccess() {
 			Model: gorm.Model{
 				ID: 1,
 			},
-			Title:   "test",
+			Title:   "testing golang for beginners",
 			Author:  "lorem bin ipsum",
 			Edition: 1,
+			Genre:   "test",
 		}, {
 			Model: gorm.Model{
 				ID: 2,
 			},
-			Title:   "test 2",
+			Title:   "testing golang for beginners 2",
 			Author:  "ipsum bin dolor",
 			Edition: 2,
+			Genre:   "test",
 		},
 	}
 
-	s.sqlmock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `books` WHERE `books`.`deleted_at` IS NULL LIMIT 0 OFFSET 10")).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "title", "author", "edition"}).
-			AddRow(expectedBooks[0].ID, expectedBooks[0].Title, expectedBooks[0].Author, expectedBooks[0].Edition).
-			AddRow(expectedBooks[1].ID, expectedBooks[1].Title, expectedBooks[1].Author, expectedBooks[1].Edition))
+	s.sqlmock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `books` WHERE `books`.`genre` = ? AND `books`.`deleted_at` IS NULL LIMIT 0 OFFSET 10")).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "title", "author", "edition", "genre"}).
+			AddRow(expectedBooks[0].ID, expectedBooks[0].Title, expectedBooks[0].Author, expectedBooks[0].Edition, expectedBooks[0].Genre).
+			AddRow(expectedBooks[1].ID, expectedBooks[1].Title, expectedBooks[1].Author, expectedBooks[1].Edition, expectedBooks[1].Genre))
 
-	resultBooks, err := s.repo.Find(0, 10)
+	resultBooks, err := s.repo.Find(0, 10, "test")
 
 	assert := assert.New(s.T())
 	assert.Nil(err)
@@ -109,9 +112,10 @@ func (s *BookRepositorySuite) TestFindSuccess() {
 
 func (s *BookRepositorySuite) TestCreate() {
 	var expectedBook = model.Book{
-		Title:   "test",
+		Title:   "testing golang for beginners",
 		Author:  "lorem bin ipsum",
 		Edition: 1,
+		Genre:   "test",
 	}
 
 	s.sqlmock.ExpectBegin()
@@ -125,6 +129,7 @@ func (s *BookRepositorySuite) TestCreate() {
 	assert.Equal(resultBook.Author, expectedBook.Author)
 	assert.Equal(resultBook.Title, expectedBook.Title)
 	assert.Equal(resultBook.Edition, expectedBook.Edition)
+	assert.Equal(resultBook.Genre, expectedBook.Genre)
 }
 
 func TestBookRepo(t *testing.T) {

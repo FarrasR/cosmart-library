@@ -18,8 +18,10 @@ func main() {
 	bookService := service.NewBookService(bookRepository)
 	borrowScheduleService := service.NewBorrowScheduleService(borrowScheduleRepository)
 
-	router.StartServer(
+	handler := router.BuildHandler(
 		handler.NewBookHandler(bookService),
 		handler.NewBorrowScheduleHandler(borrowScheduleService),
 	)
+
+	router.RunServer(handler)
 }

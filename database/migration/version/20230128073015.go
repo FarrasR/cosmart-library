@@ -12,8 +12,8 @@ var V20230128073015 = gormigrate.Migration{
 	Migrate: func(tx *gorm.DB) error {
 		type Book struct {
 			gorm.Model
-			Title   string
-			Author  string
+			Title   string `gorm:"type:varchar(255);not null"`
+			Author  string `gorm:"type:varchar(255);not null"`
 			Edition int
 		}
 		type BorrowSchedule struct {

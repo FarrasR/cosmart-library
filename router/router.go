@@ -3,29 +3,30 @@ package router
 import (
 	"cosmart-library/entity/response"
 	"cosmart-library/handler"
-	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-func StartServer(handlers ...handler.Handler) http.Handler {
+func BuildHandler(handlers ...handler.Handler) *gin.Engine {
 	router := gin.New()
 	router.RedirectFixedPath = true
-
-	router.GET("/", func(c *gin.Context) {
-		healthCheck(c)
-	})
 
 	for _, handler := range handlers {
 		handler.Register(router)
 	}
+	return router
+}
+
+func RunServer(router *gin.Engine) {
+	router.GET("/", func(c *gin.Context) {
+		healthCheck(c)
+	})
 
 	err := router.Run(os.Getenv("APP_PORT"))
 	if err != nil {
 		panic("Error To Start")
 	}
-	return router
 }
 
 func healthCheck(c *gin.Context) {

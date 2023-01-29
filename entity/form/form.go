@@ -18,3 +18,9 @@ type FormReturnBook struct {
 	ScheduleId int       `json:"schedule_id"`
 	ReturnTime time.Time `json:"return_time"`
 }
+
+type FormGetBooks struct {
+	Limit  int
+	Offset int
+	Genre  string
+}

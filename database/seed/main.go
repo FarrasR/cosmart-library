@@ -22,6 +22,7 @@ type Work struct {
 	Cover_id          int      `json:"cover_id"`
 	Cover_edition_key string   `json:"cover_edition_key"`
 	Authors           []Author `json:"authors"`
+	Subject           []string `json:"subject"`
 }
 
 type OpenLibrary struct {
@@ -57,6 +58,7 @@ func main() {
 				Title:   open_library.Works[i].Title,
 				Author:  open_library.Works[i].Authors[0].Name,
 				Edition: open_library.Works[i].Edition_count,
+				Genre:   open_library.Works[i].Subject[0],
 			}
 
 			if result := ins.GetConn().Create(&book); result.Error != nil {

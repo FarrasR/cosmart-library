@@ -34,13 +34,13 @@ func (_m *BookRepository) Create(book model.Book) (model.Book, error) {
 	return r0, r1
 }
 
-// Find provides a mock function with given fields: offset, limit
-func (_m *BookRepository) Find(offset int, limit int) ([]model.Book, error) {
-	ret := _m.Called(offset, limit)
+// Find provides a mock function with given fields: limit, offset, genre
+func (_m *BookRepository) Find(limit int, offset int, genre string) ([]model.Book, error) {
+	ret := _m.Called(limit, offset, genre)
 
 	var r0 []model.Book
-	if rf, ok := ret.Get(0).(func(int, int) []model.Book); ok {
-		r0 = rf(offset, limit)
+	if rf, ok := ret.Get(0).(func(int, int, string) []model.Book); ok {
+		r0 = rf(limit, offset, genre)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]model.Book)
@@ -48,8 +48,8 @@ func (_m *BookRepository) Find(offset int, limit int) ([]model.Book, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(int, int) error); ok {
-		r1 = rf(offset, limit)
+	if rf, ok := ret.Get(1).(func(int, int, string) error); ok {
+		r1 = rf(limit, offset, genre)
 	} else {
 		r1 = ret.Error(1)
 	}

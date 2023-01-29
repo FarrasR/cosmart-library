@@ -56,27 +56,34 @@ func (s *BookServiceSuite) TestGetBookByIdFailed() {
 }
 
 func (s *BookServiceSuite) TestGetBooksSuccess() {
+	form := form.FormGetBooks{
+		Genre:  "test",
+		Limit:  10,
+		Offset: 0,
+	}
+
 	var expectedBooks = []model.Book{
 		{
 			Model: gorm.Model{
 				ID: 1,
 			},
-			Title:   "test",
+			Title:   "testing for golang",
 			Author:  "lorem bin ipsum",
 			Edition: 1,
+			Genre:   "test",
 		}, {
 			Model: gorm.Model{
 				ID: 2,
 			},
-			Title:   "test 2",
-			Author:  "ipsum bin dolor",
-			Edition: 2,
+			Title:  "testing for golang 2",
+			Author: "ipsum bin dolor",
+			Genre:  "test",
 		},
 	}
 
-	s.repo.On("Find", 10, 0).Return(expectedBooks, nil)
+	s.repo.On("Find", 10, 0, "test").Return(expectedBooks, nil)
 
-	resultBooks, err := s.service.GetBooks(10, 0)
+	resultBooks, err := s.service.GetBooks(form)
 
 	assert := assert.New(s.T())
 	assert.Nil(err)
@@ -84,9 +91,15 @@ func (s *BookServiceSuite) TestGetBooksSuccess() {
 }
 
 func (s *BookServiceSuite) TestGetBooksFailed() {
-	s.repo.On("Find", 10, 0).Return([]model.Book{}, errors.New("something went wrong"))
+	form := form.FormGetBooks{
+		Genre:  "test",
+		Limit:  10,
+		Offset: 0,
+	}
 
-	resultBooks, err := s.service.GetBooks(10, 0)
+	s.repo.On("Find", 10, 0, "test").Return([]model.Book{}, errors.New("something went wrong"))
+
+	resultBooks, err := s.service.GetBooks(form)
 
 	assert := assert.New(s.T())
 	assert.NotNil(err)

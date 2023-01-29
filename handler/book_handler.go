@@ -37,8 +37,15 @@ func (h *BookHandler) GetBooks(c *gin.Context) {
 		response.ErrorInvalidParameter(c)
 		return
 	}
+	genre := c.DefaultQuery("genre", "")
 
-	books, err := h.BookService.GetBooks(limit, offset)
+	form := form.FormGetBooks{
+		Limit:  limit,
+		Offset: offset,
+		Genre:  genre,
+	}
+
+	books, err := h.BookService.GetBooks(form)
 	if err != nil {
 		response.ErrorInvalidParameter(c)
 		return

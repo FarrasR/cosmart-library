@@ -17,6 +17,7 @@ func main() {
 	m := gormigrate.New(ins.GetConn(), gormigrate.DefaultOptions, []*gormigrate.Migration{
 		&migrationVersion.V20230128073015,
 		&migrationVersion.V20230128090000,
+		&migrationVersion.V20230129090000,
 	})
 
 	if err := m.Migrate(); err != nil {
