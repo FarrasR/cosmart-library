@@ -35,6 +35,7 @@ func (s *bookService) CreateBook(form form.FormCreateBook) (model.Book, error) {
 		Title:   form.Title,
 		Author:  form.Author,
 		Edition: form.Edition,
+		Genre:   form.Genre,
 	}
 
 	return s.BookRepository.Create(book)

@@ -3,6 +3,7 @@ package router
 import (
 	"cosmart-library/entity/response"
 	"cosmart-library/handler"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +11,6 @@ import (
 
 func BuildHandler(handlers ...handler.Handler) *gin.Engine {
 	router := gin.New()
-	router.RedirectFixedPath = true
 
 	for _, handler := range handlers {
 		handler.Register(router)
@@ -19,9 +19,15 @@ func BuildHandler(handlers ...handler.Handler) *gin.Engine {
 }
 
 func RunServer(router *gin.Engine) {
+	router.RedirectFixedPath = true
+	router.HandleMethodNotAllowed = true
+
 	router.GET("/", func(c *gin.Context) {
 		healthCheck(c)
 	})
+	router.NoRoute(noRoute)
+	router.NoMethod(noMethod)
+	router.Use(handleInternalError)
 
 	err := router.Run(os.Getenv("APP_PORT"))
 	if err != nil {
@@ -31,4 +37,22 @@ func RunServer(router *gin.Engine) {
 
 func healthCheck(c *gin.Context) {
 	response.OKHelloWorld(c)
+}
+
+func noRoute(c *gin.Context) {
+	response.Error(c, http.StatusNotFound, "Not Found")
+}
+
+func noMethod(c *gin.Context) {
+	response.Error(c, http.StatusMethodNotAllowed, "Method Not Allowed")
+
+}
+
+func handleInternalError(c *gin.Context) {
+	if len(c.Errors) <= 0 {
+		c.Next()
+		return
+	}
+
+	response.Error(c, http.StatusInternalServerError, c.Errors.Last().Error())
 }

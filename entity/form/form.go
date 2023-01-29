@@ -6,6 +6,7 @@ type FormCreateBook struct {
 	Title   string `json:"title"`
 	Author  string `json:"author"`
 	Edition int    `json:"edition"`
+	Genre   string `json:"genre"`
 }
 
 type FormCreateSchedule struct {

@@ -27,14 +27,14 @@ func (h *BorrowScheduleHandler) Register(router *gin.Engine) {
 func (h *BorrowScheduleHandler) PostCreateBorrowSchedule(c *gin.Context) {
 	var form form.FormCreateSchedule
 
-	if err := c.BindJSON(&form); err != nil {
+	if err := c.ShouldBindJSON(&form); err != nil {
 		response.ErrorInvalidParameter(c)
 		return
 	}
 
 	result, err := h.BorrowScheduleServices.CreateSchedule(form)
 	if err != nil {
-		response.Error(c, http.StatusInternalServerError, err.Error())
+		response.Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -44,7 +44,7 @@ func (h *BorrowScheduleHandler) PostCreateBorrowSchedule(c *gin.Context) {
 func (h *BorrowScheduleHandler) PostReturnBook(c *gin.Context) {
 	var form form.FormReturnBook
 
-	if err := c.BindJSON(&form); err != nil {
+	if err := c.ShouldBindJSON(&form); err != nil {
 		response.ErrorInvalidParameter(c)
 		return
 	}

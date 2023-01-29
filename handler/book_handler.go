@@ -2,6 +2,7 @@ package handler
 
 import (
 	"cosmart-library/entity/form"
+	"cosmart-library/entity/request"
 	"cosmart-library/entity/response"
 	"cosmart-library/service"
 	"net/http"
@@ -27,17 +28,11 @@ func (h *BookHandler) Register(router *gin.Engine) {
 }
 
 func (h *BookHandler) GetBooks(c *gin.Context) {
-	limit, err := strconv.Atoi(c.DefaultQuery("limit", "10"))
-	if err != nil {
-		response.ErrorInvalidParameter(c)
-		return
-	}
-	offset, err := strconv.Atoi(c.DefaultQuery("offset", "0"))
-	if err != nil {
-		response.ErrorInvalidParameter(c)
-		return
-	}
-	genre := c.DefaultQuery("genre", "")
+	qh := request.NewQueryHelper(c)
+
+	limit := qh.GetInt("limit", 10)
+	offset := qh.GetInt("offset", 0)
+	genre := qh.GetString("genre", "")
 
 	form := form.FormGetBooks{
 		Limit:  limit,
@@ -47,7 +42,7 @@ func (h *BookHandler) GetBooks(c *gin.Context) {
 
 	books, err := h.BookService.GetBooks(form)
 	if err != nil {
-		response.ErrorInvalidParameter(c)
+		response.Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -62,25 +57,25 @@ func (h *BookHandler) GetBookById(c *gin.Context) {
 	}
 
 	book, err := h.BookService.GetBookById(id)
-
 	if err != nil {
-		response.ErrorInvalidParameter(c)
+		response.Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
+
 	response.OK(c, book)
 }
 
 func (h *BookHandler) PostBook(c *gin.Context) {
 	var form form.FormCreateBook
 
-	if err := c.BindJSON(&form); err != nil {
+	if err := c.ShouldBindJSON(&form); err != nil {
 		response.ErrorInvalidParameter(c)
 		return
 	}
 
 	book, err := h.BookService.CreateBook(form)
 	if err != nil {
-		response.Error(c, http.StatusInternalServerError, err.Error())
+		response.Error(c, http.StatusBadRequest, err.Error())
 		return
 	}
 	response.OKWithHTTPCode(c, http.StatusCreated, "Book created successfully", book)
